@@ -10,17 +10,12 @@ from sklearn.manifold import TSNE
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
-import warnings
 
-# Suppress undefined metric warnings
-warnings.filterwarnings('ignore', category=UserWarning)
 # Set GPU settings
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-#%%
 
-# Define the model architecture
 def my_model(input_shape, num_classes):
     model = Sequential([
         Conv1D(filters=16, kernel_size=3, input_shape=input_shape),
@@ -50,7 +45,6 @@ def my_model(input_shape, num_classes):
 input_shape = (4096, 1)
 num_classes = 86
 model = my_model(input_shape, num_classes)
-#%%
 # Load the saved weights
 weights_path = "weight.ckpt"
 model.load_weights(weights_path)
@@ -58,7 +52,6 @@ model.load_weights(weights_path)
 # Compile the model
 optimizer = RMSprop(learning_rate=0.000173)
 model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
-#%%
 # Load the test data
 test_data_path = "fingerprints/test_LSTM.npz"
 test_data = np.load(test_data_path)
@@ -68,12 +61,10 @@ y_test = test_data['y_test']
 # Evaluate the model on the test data
 loss, accuracy = model.evaluate(X_test, y_test)
 print(f"Test Accuracy: {accuracy * 100:.2f}%")
-#%%
 # Predict and evaluate the final trained model on the test set
 y_pred_prob = model.predict(X_test)
 y_true = np.argmax(y_test, axis=1)
 y_pred = np.argmax(y_pred_prob, axis=1)
-#%%
 import matplotlib.pyplot as plt
 
 # Create empty lists to store metrics for each class
@@ -141,7 +132,6 @@ plt.legend().set_visible(False)
 plt.show()
 plt.savefig('BoXPlot.png', dpi=400)
 
-#%%
 # Confusion matrix
 conf_matrix = confusion_matrix(y_true, y_pred)
 
@@ -174,7 +164,6 @@ for plot_index in range(n_plots):
     file_name = f"visualization metrix/roc_curve_plot_{plot_index + 1}.png"
     plt.savefig(file_name, dpi=500)
     plt.show()
-#%%
 # Normalize and plot confusion matrix
 cm_percent = conf_matrix.astype('float') / conf_matrix.sum(axis=1)[:, np.newaxis]
 
@@ -188,4 +177,3 @@ plt.title('Confusion Matrix Heatmap', fontsize=30)
 plt.xticks(fontsize=16)
 plt.yticks(fontsize=16)
 plt.show()
-#%%
