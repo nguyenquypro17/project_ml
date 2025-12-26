@@ -1,10 +1,10 @@
-#PHẦN 1: CÀI ĐẶT MÔI TRƯỜNG (CHẠY ĐẦU TIÊN)
+#PHẦN 1: CÀI ĐẶT MÔI TRƯỜNG
 import os
 import sys
 os.system("pip install 'protobuf==3.20.3' 'rdkit>=2023.3.3' > /dev/null 2>&1")
 print(">>> Đã cài đặt xong môi trường!")
 print(tf.config.list_physical_devices('GPU'))
-# --- PHẦN 2: IMPORT THƯ VIỆN & CẤU HÌNH ---
+#PHẦN 2: IMPORT THƯ VIỆN & CẤU HÌNH
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -49,7 +49,7 @@ def my_model(input_shape, num_classes):
         BatchNormalization(),
         MaxPooling1D(pool_size=2),
         Dropout(0.2),
-        # CNN Block 4 (Trước LSTM)
+        # CNN Block 4
         Conv1D(filters=64, activation='relu', kernel_size=3),
         BatchNormalization(),
         # BiLSTM Layers
@@ -85,13 +85,13 @@ print("\n>>> BẮT ĐẦU HUẤN LUYỆN...")
 history = model.fit(
     X_train, y_train,
     validation_data=(X_val, y_val),
-    epochs=1,
+    epochs=320,
     batch_size=256,
     callbacks=[checkpoint, early_stop],
-    verbose=1
+    verbose=2
 )
 
-# D. Vẽ Loss Curve (Yêu cầu của bạn)
+# D. Vẽ Loss Curve
 plt.figure(figsize=(12, 5))
 # Biểu đồ Loss
 plt.subplot(1, 2, 1)
